@@ -58,9 +58,9 @@ export default function Settings({ onClose }: { onClose: () => void }) {
     { value: 'platinum',     label: t.platinum     },
   ]
 
-  const spec      = ELECTRODE_SPECS[config.electrodeType]
+  const spec      = ELECTRODE_SPECS[config.electrodeType ?? 'graphite']
   const hoursUsed = lifetimeSeconds / 3600
-  const isPlatinum = config.electrodeType === 'platinum'
+  const isPlatinum = (config.electrodeType ?? 'graphite') === 'platinum'
   const healthPct = isPlatinum ? 100 : Math.max(0, Math.round((1 - hoursUsed / spec.maxHours) * 100))
   const healthColor = isPlatinum ? 'var(--green)' : healthPct > 60 ? 'var(--green)' : healthPct > 25 ? 'var(--amber)' : 'var(--red)'
 
