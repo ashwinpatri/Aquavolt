@@ -50,6 +50,7 @@ export default function Settings({ onClose }: { onClose: () => void }) {
   const { connected, connectionType, deviceModel, language, setLanguage, config, updateConfig, lifetimeSeconds, resetElectrode, setElectrodeType } = useAppStore()
   const { disconnect } = usePiConnection()
   const [docsOpen, setDocsOpen] = useState(false)
+  const [confirmReset, setConfirmReset] = useState(false)
   const t = useLanguage()
 
   const electrodeOptions: { value: ElectrodeType; label: string }[] = [
@@ -150,11 +151,6 @@ export default function Settings({ onClose }: { onClose: () => void }) {
                 )}
               </div>
 
-              <button onClick={resetElectrode}
-                style={{ width: '100%', padding: '9px', borderRadius: 'var(--radius-md)', border: '1px solid var(--bg-border)', background: 'var(--bg-tertiary)', color: 'var(--text-secondary)', fontSize: '12px', fontWeight: 500, cursor: 'pointer', transition: 'all 0.15s ease' }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--purple-600)'; e.currentTarget.style.color = 'var(--text-primary)' }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--bg-border)'; e.currentTarget.style.color = 'var(--text-secondary)' }}
-              >{t.resetElectrode}</button>
             </Section>
 
             <Section title={t.advanced}>
@@ -187,6 +183,30 @@ export default function Settings({ onClose }: { onClose: () => void }) {
               <SettingRow label={t.version}><span style={{ fontSize: '13px', color: 'var(--text-muted)' }}>1.0.0</span></SettingRow>
               <SettingRow label="Protocol"><span style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Faraday's Law (INA219)</span></SettingRow>
             </Section>
+
+            {/* Danger zone */}
+            <div style={{ borderTop: '1px solid rgba(239,68,68,0.2)', paddingTop: '24px', marginTop: '8px' }}>
+              {confirmReset ? (
+                <div style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.3)', borderRadius: 'var(--radius-md)', padding: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  <span style={{ fontSize: '13px', color: 'var(--text-primary)', fontWeight: 500 }}>Reset electrode wear counter to zero?</span>
+                  <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Only do this when you have installed new electrodes.</span>
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <button onClick={() => { resetElectrode(); setConfirmReset(false) }}
+                      style={{ flex: 1, padding: '9px', borderRadius: 'var(--radius-md)', border: '1px solid rgba(239,68,68,0.4)', background: 'rgba(239,68,68,0.15)', color: 'var(--red)', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}
+                    >Yes, reset</button>
+                    <button onClick={() => setConfirmReset(false)}
+                      style={{ flex: 1, padding: '9px', borderRadius: 'var(--radius-md)', border: '1px solid var(--bg-border)', background: 'var(--bg-tertiary)', color: 'var(--text-secondary)', fontSize: '13px', cursor: 'pointer' }}
+                    >Cancel</button>
+                  </div>
+                </div>
+              ) : (
+                <button onClick={() => setConfirmReset(true)}
+                  style={{ width: '100%', padding: '11px', borderRadius: 'var(--radius-md)', border: '1px solid rgba(239,68,68,0.3)', background: 'rgba(239,68,68,0.08)', color: 'var(--red)', fontSize: '13px', fontWeight: 500, cursor: 'pointer', transition: 'all 0.15s ease' }}
+                  onMouseEnter={e => { e.currentTarget.style.background = 'rgba(239,68,68,0.15)'; e.currentTarget.style.borderColor = 'rgba(239,68,68,0.5)' }}
+                  onMouseLeave={e => { e.currentTarget.style.background = 'rgba(239,68,68,0.08)'; e.currentTarget.style.borderColor = 'rgba(239,68,68,0.3)' }}
+                >{t.resetElectrode}</button>
+              )}
+            </div>
 
           </div>
         </div>
