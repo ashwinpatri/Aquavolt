@@ -9,6 +9,8 @@ export interface LiveData {
   running?: boolean
 }
 
+export type ElectrodeType = 'graphite' | 'titanium_mmo' | 'platinum'
+
 export interface AppConfig {
   targetPpm: number
   volumeLiters: number | null
@@ -18,6 +20,7 @@ export interface AppConfig {
   maxCurrent: number
   maxRuntime: number
   autoStop: boolean
+  electrodeType: ElectrodeType
 }
 
 export interface SessionRecord {
@@ -29,6 +32,7 @@ export interface SessionRecord {
   grams: number
   ppm: number | null
   efficiency: number
+  wattHours: number
   status: 'complete' | 'interrupted'
 }
 
@@ -105,6 +109,16 @@ export interface Translations {
   idle: string
   targetReached: string
   safeToUse: string
+  electrodes: string
+  electrodeType: string
+  electrodeHealth: string
+  resetElectrode: string
+  hoursUsed: string
+  hoursRemaining: string
+  energyCost: string
+  graphite: string
+  titaniumMmo: string
+  platinum: string
 }
 
 export type Language = 'en' | 'de' | 'ru'

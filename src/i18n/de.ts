@@ -87,6 +87,16 @@ Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil 
   idle: 'Bereit',
   targetReached: 'Ziel erreicht',
   safeToUse: 'Zur Wasseraufbereitung geeignet',
+  electrodes: 'Elektroden',
+  electrodeType: 'Elektrodenmaterial',
+  electrodeHealth: 'Elektrodengesundheit',
+  resetElectrode: 'Zurücksetzen (Neue Elektroden eingebaut)',
+  hoursUsed: 'Stunden genutzt',
+  hoursRemaining: 'Verbleibende Stunden',
+  energyCost: 'Energiekosten',
+  graphite: 'Graphit',
+  titaniumMmo: 'Titan MMO',
+  platinum: 'Platin',
 }
 
 export default de

@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import type { LiveData, AppConfig, SessionRecord, Language } from '../types'
+import type { LiveData, AppConfig, SessionRecord, Language, ElectrodeType } from '../types'
 import { PPM_DEFAULT, DUTY_DEFAULT, DEFAULT_EFFICIENCY, MAX_CURRENT_DEFAULT, MAX_RUNTIME_DEFAULT } from '../utils/constants'
 
 interface AppStore {
@@ -37,6 +37,11 @@ interface AppStore {
   sessions: SessionRecord[]
   addSession: (session: SessionRecord) => void
   clearSessions: () => void
+
+  lifetimeSeconds: number
+  addLifetimeSeconds: (s: number) => void
+  resetElectrode: () => void
+  setElectrodeType: (type: ElectrodeType) => void
 }
 
 const DEFAULT_LIVE: LiveData = { voltage: 0, current: 0, power: 0, charge: 0, uptime: 0, duty: 0, timestamp: null }
@@ -61,6 +66,7 @@ export const useAppStore = create<AppStore>()(
         targetPpm: PPM_DEFAULT, volumeLiters: 1.0, customVolume: null,
         efficiency: DEFAULT_EFFICIENCY, dutyCycle: DUTY_DEFAULT,
         maxCurrent: MAX_CURRENT_DEFAULT, maxRuntime: MAX_RUNTIME_DEFAULT, autoStop: true,
+        electrodeType: 'graphite' as ElectrodeType,
       },
       updateConfig: (patch) => set((s) => ({ config: { ...s.config, ...patch } })),
 
@@ -80,12 +86,18 @@ export const useAppStore = create<AppStore>()(
       sessions: [],
       addSession: (session) => set((s) => ({ sessions: [session, ...s.sessions] })),
       clearSessions: () => set({ sessions: [] }),
+
+      lifetimeSeconds: 0,
+      addLifetimeSeconds: (s) => set((st) => ({ lifetimeSeconds: st.lifetimeSeconds + s })),
+      resetElectrode: () => set({ lifetimeSeconds: 0 }),
+      setElectrodeType: (type) => set((s) => ({ config: { ...s.config, electrodeType: type } })),
     }),
     {
       name: 'aquavolt-store',
       partialize: (s) => ({
         language: s.language, tosAccepted: s.tosAccepted,
         config: s.config, sessions: s.sessions, lastDeployedAt: s.lastDeployedAt,
+        lifetimeSeconds: s.lifetimeSeconds,
       }),
     }
   )

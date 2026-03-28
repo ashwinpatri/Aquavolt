@@ -87,6 +87,16 @@ Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil 
   idle: 'Готово',
   targetReached: 'Цель достигнута',
   safeToUse: 'Пригодно для обработки воды',
+  electrodes: 'Электроды',
+  electrodeType: 'Материал электрода',
+  electrodeHealth: 'Состояние электрода',
+  resetElectrode: 'Сбросить (новые электроды)',
+  hoursUsed: 'Часов использовано',
+  hoursRemaining: 'Часов осталось',
+  energyCost: 'Затраты энергии',
+  graphite: 'Графит',
+  titaniumMmo: 'Титан MMO',
+  platinum: 'Платина',
 }
 
 export default ru

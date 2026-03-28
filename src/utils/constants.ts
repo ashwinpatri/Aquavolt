@@ -20,6 +20,16 @@ export const DUTY_DEFAULT = 70
 export const MAX_CURRENT_DEFAULT = 3.0       // A
 export const MAX_RUNTIME_DEFAULT = 60        // minutes
 
+// Electrode specs: max operational hours before replacement recommended
+// Graphite: degrades continuously via oxidation (~100 hrs for hobbyist cells)
+// Titanium MMO (DSA): 3,000–50,000 hrs rated; 5,000 used as conservative hobbyist estimate
+// Platinum: effectively no wear for hobbyist use
+export const ELECTRODE_SPECS = {
+  graphite:     { label: 'Graphite',     maxHours: 100  },
+  titanium_mmo: { label: 'Titanium MMO', maxHours: 5000 },
+  platinum:     { label: 'Platinum',     maxHours: 0    }, // 0 = no wear tracking
+} as const
+
 export const MOCK_INTERVAL_MS = 500          // how often mock data updates
 export const CHART_WINDOW = 120              // seconds of history to show in charts
 

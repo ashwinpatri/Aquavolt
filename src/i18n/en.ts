@@ -87,6 +87,16 @@ Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil 
   idle: 'Idle',
   targetReached: 'Target Reached',
   safeToUse: 'Safe to use for water treatment',
+  electrodes: 'Electrodes',
+  electrodeType: 'Electrode Material',
+  electrodeHealth: 'Electrode Health',
+  resetElectrode: 'Reset (New Electrodes Installed)',
+  hoursUsed: 'Hours Used',
+  hoursRemaining: 'Hours Remaining',
+  energyCost: 'Energy Cost',
+  graphite: 'Graphite',
+  titaniumMmo: 'Titanium MMO',
+  platinum: 'Platinum',
 }
 
 export default en

@@ -1,11 +1,11 @@
-import { X, Usb, Bluetooth, BookOpen, ArrowLeft } from 'lucide-react'
+import { Usb, Bluetooth, BookOpen, ArrowLeft } from 'lucide-react'
 import { useState } from 'react'
 import { useAppStore } from '../store/appStore'
 import { usePiConnection } from '../hooks/usePiConnection'
 import { useLanguage } from '../App'
-import { LANGUAGES } from '../utils/constants'
+import { LANGUAGES, ELECTRODE_SPECS } from '../utils/constants'
 import DocsViewer from '../components/docs/DocsViewer'
-import type { Language } from '../types'
+import type { Language, ElectrodeType } from '../types'
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -47,10 +47,22 @@ function Toggle({ value, onChange }: { value: boolean; onChange: (v: boolean) =>
 }
 
 export default function Settings({ onClose }: { onClose: () => void }) {
-  const { connected, connectionType, deviceModel, language, setLanguage, config, updateConfig } = useAppStore()
+  const { connected, connectionType, deviceModel, language, setLanguage, config, updateConfig, lifetimeSeconds, resetElectrode, setElectrodeType } = useAppStore()
   const { disconnect } = usePiConnection()
   const [docsOpen, setDocsOpen] = useState(false)
   const t = useLanguage()
+
+  const electrodeOptions: { value: ElectrodeType; label: string }[] = [
+    { value: 'graphite',     label: t.graphite     },
+    { value: 'titanium_mmo', label: t.titaniumMmo  },
+    { value: 'platinum',     label: t.platinum     },
+  ]
+
+  const spec      = ELECTRODE_SPECS[config.electrodeType]
+  const hoursUsed = lifetimeSeconds / 3600
+  const isPlatinum = config.electrodeType === 'platinum'
+  const healthPct = isPlatinum ? 100 : Math.max(0, Math.round((1 - hoursUsed / spec.maxHours) * 100))
+  const healthColor = isPlatinum ? 'var(--green)' : healthPct > 60 ? 'var(--green)' : healthPct > 25 ? 'var(--amber)' : 'var(--red)'
 
   return (
     <>
@@ -100,6 +112,49 @@ export default function Settings({ onClose }: { onClose: () => void }) {
                   {LANGUAGES.map(l => <option key={l.code} value={l.code}>{l.flag} {l.label}</option>)}
                 </select>
               </SettingRow>
+            </Section>
+
+            <Section title={t.electrodes}>
+              <SettingRow label={t.electrodeType}>
+                <div style={{ display: 'flex', gap: '6px' }}>
+                  {electrodeOptions.map(opt => (
+                    <button key={opt.value} onClick={() => setElectrodeType(opt.value)}
+                      style={{
+                        padding: '5px 12px', borderRadius: 'var(--radius-sm)', fontSize: '12px', fontWeight: 500, cursor: 'pointer', transition: 'all 0.15s ease',
+                        background: config.electrodeType === opt.value ? 'var(--purple-600)' : 'var(--bg-tertiary)',
+                        border: `1px solid ${config.electrodeType === opt.value ? 'var(--purple-600)' : 'var(--bg-border)'}`,
+                        color: config.electrodeType === opt.value ? '#fff' : 'var(--text-secondary)',
+                      }}
+                    >{opt.label}</button>
+                  ))}
+                </div>
+              </SettingRow>
+
+              <div style={{ marginBottom: '12px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
+                  <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>{t.electrodeHealth}</span>
+                  <span style={{ fontSize: '13px', fontWeight: 600, color: healthColor }}>
+                    {isPlatinum ? 'No wear' : `${healthPct}%`}
+                  </span>
+                </div>
+                {!isPlatinum && (
+                  <>
+                    <div style={{ height: '6px', borderRadius: '3px', background: 'var(--bg-border)', overflow: 'hidden' }}>
+                      <div style={{ height: '100%', width: `${healthPct}%`, background: healthColor, borderRadius: '3px', transition: 'width 0.3s ease' }} />
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '6px' }}>
+                      <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{t.hoursUsed}: {hoursUsed.toFixed(1)}h</span>
+                      <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{t.hoursRemaining}: {Math.max(0, spec.maxHours - hoursUsed).toFixed(1)}h</span>
+                    </div>
+                  </>
+                )}
+              </div>
+
+              <button onClick={resetElectrode}
+                style={{ width: '100%', padding: '9px', borderRadius: 'var(--radius-md)', border: '1px solid var(--bg-border)', background: 'var(--bg-tertiary)', color: 'var(--text-secondary)', fontSize: '12px', fontWeight: 500, cursor: 'pointer', transition: 'all 0.15s ease' }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--purple-600)'; e.currentTarget.style.color = 'var(--text-primary)' }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--bg-border)'; e.currentTarget.style.color = 'var(--text-secondary)' }}
+              >{t.resetElectrode}</button>
             </Section>
 
             <Section title={t.advanced}>
