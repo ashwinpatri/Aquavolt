@@ -54,7 +54,7 @@ export default function TopBar({ onDocsOpen }: { onDocsOpen: () => void }) {
           {tabs.map(tab => (
             <button
               key={tab.key}
-              onClick={() => setActiveTab(tab.key)}
+              onClick={() => { setActiveTab(tab.key); setSettingsOpen(false) }}
               style={{
                 padding:      '5px 16px',
                 borderRadius: '7px',
