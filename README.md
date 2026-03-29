@@ -9,11 +9,11 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/ashwinpatri/AquaVolt/releases/latest/download/AquaVolt_1.1.0_x64-setup.exe">⬇️ Download for Windows</a>
+  <a href="https://github.com/ashwinpatri/AquaVolt/releases/latest/download/AquaVolt_1.1.1_x64-setup.exe">⬇️ Download for Windows</a>
   &nbsp;&nbsp;|&nbsp;&nbsp;
-  <a href="https://github.com/ashwinpatri/AquaVolt/releases/latest/download/AquaVolt_1.1.0_aarch64.dmg">⬇️ Download for macOS (Apple Silicon)</a>
+  <a href="https://github.com/ashwinpatri/AquaVolt/releases/latest/download/AquaVolt_1.1.1_aarch64.dmg">⬇️ Download for macOS (Apple Silicon)</a>
   &nbsp;&nbsp;|&nbsp;&nbsp;
-  <a href="https://github.com/ashwinpatri/AquaVolt/releases/latest/download/AquaVolt_1.1.0_x64.dmg">⬇️ Download for macOS (Intel)</a>
+  <a href="https://github.com/ashwinpatri/AquaVolt/releases/latest/download/AquaVolt_1.1.1_x64.dmg">⬇️ Download for macOS (Intel)</a>
 </p>
 
 ---
