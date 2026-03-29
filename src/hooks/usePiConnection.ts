@@ -27,8 +27,7 @@ export function usePiConnection() {
           timestamp: typeof data.timestamp === 'number'  ? data.timestamp : Date.now(),
           running:   typeof data.running   === 'boolean' ? data.running   : undefined,
         })
-        // Only set running=false from Pi if current was 0 (genuine stop, not pre-start packet)
-        if (data.running === false && (data.current as number) === 0 && (data.voltage as number) === 0) setRunning(false)
+        // Running state is controlled only by start()/stop() and disconnect
       } catch { /* ignore malformed frames */ }
     })
 
