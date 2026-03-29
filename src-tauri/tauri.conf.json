@@ -1,6 +1,6 @@
 {
   "productName": "AquaVolt",
-  "version": "1.0.0",
+  "version": "1.0.5",
   "identifier": "com.aquavolt.app",
   "build": {
     "beforeDevCommand": "npm run vite",
