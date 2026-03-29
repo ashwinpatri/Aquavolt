@@ -23,8 +23,17 @@ sed -i '' "s/$current/$new_version/" "$VERSION_FILE"
 # Update package.json
 sed -i '' "s/\"version\": \"$current\"/\"version\": \"$new_version\"/" package.json
 
+# Update tauri.conf.json
+sed -i '' "s/\"version\": \"$current\"/\"version\": \"$new_version\"/" src-tauri/tauri.conf.json
+
+# Update Cargo.toml
+sed -i '' "s/^version = \"$current\"/version = \"$new_version\"/" src-tauri/Cargo.toml
+
+# Update README download links
+sed -i '' "s/AquaVolt_${current}/AquaVolt_${new_version}/g" README.md
+
 # Commit the bump
-git add "$VERSION_FILE" package.json
+git add "$VERSION_FILE" package.json src-tauri/tauri.conf.json src-tauri/Cargo.toml README.md
 git commit -m "v$new_version"
 
 echo "Version bumped: $current → $new_version"
