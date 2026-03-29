@@ -1,11 +1,11 @@
 <p align="center">
-  <img src="src/assets/images/AquaVolt.png" alt="AquaVolt Logo" width="400"/>
+  <img src="src/assets/images/AquaVolt.png" alt="AquaVolt Logo" width="700"/>
 </p>
 
 <h1 align="center">AquaVolt</h1>
 
 <p align="center">
-  A desktop application for monitoring and controlling electrochemical water treatment cells — powered by Faraday's Law.
+  A desktop application for monitoring and controlling electrochemical water treatment cells, powered by Faraday's Law.
 </p>
 
 <table align="center">
@@ -23,7 +23,7 @@
 </tr>
 </table>
 
-<p align="center"><b>macOS (Apple Silicon) — First Time Setup</b><br>
+<p align="center"><b>macOS (Apple Silicon) First Time Setup</b><br>
 After downloading, double-click the <code>.tar.gz</code> to extract, then open Terminal and run:<br>
 <code>xattr -rd com.apple.quarantine ~/Downloads/AquaVolt.app</code><br>
 Then drag <code>AquaVolt.app</code> to your Applications folder and open it normally.
