@@ -13,25 +13,25 @@
 
 ## Downloads
 
-<p align="center">
-
+<table align="center">
+<tr>
+<td align="center">
 <a href="https://github.com/ashwinpatri/AquaVolt/releases/latest/download/AquaVolt_1.0.6_x64-setup.exe">
-  <img src="https://img.shields.io/badge/Windows-Download-blue?style=for-the-badge&logo=windows" />
+  <img src="https://img.shields.io/badge/Windows-Download-blue?style=for-the-badge&logo=windows" alt="Download for Windows" />
 </a>
-
-&nbsp;&nbsp;
-
+</td>
+<td align="center">
 <a href="https://github.com/ashwinpatri/AquaVolt/releases/latest/download/AquaVolt_1.0.6_aarch64.dmg">
-  <img src="https://img.shields.io/badge/macOS%20(Apple%20Silicon)-Download-black?style=for-the-badge&logo=apple" />
+  <img src="https://img.shields.io/badge/macOS%20(Apple%20Silicon)-Download-black?style=for-the-badge&logo=apple" alt="Download for macOS Apple Silicon" />
 </a>
-
-&nbsp;&nbsp;
-
+</td>
+<td align="center">
 <a href="https://github.com/ashwinpatri/AquaVolt/releases/latest/download/AquaVolt_1.0.6_x64.dmg">
-  <img src="https://img.shields.io/badge/macOS%20(Intel)-Download-lightgrey?style=for-the-badge&logo=apple" />
+  <img src="https://img.shields.io/badge/macOS%20(Intel)-Download-lightgrey?style=for-the-badge&logo=apple" alt="Download for macOS Intel" />
 </a>
-
-</p>
+</td>
+</tr>
+</table>
 
 ---
 
@@ -39,7 +39,7 @@
 
 AquaVolt is a native desktop application for Raspberry Pi–connected electrochemical systems that generate sodium hypochlorite (NaOCl) for water treatment.
 
-The application streams real-time sensor data from an INA219 current/voltage sensor, computes chlorine production using Faraday’s Law, and provides a structured interface for monitoring, control, and session logging.
+The application streams real-time sensor data from an INA219 current and voltage sensor, computes chlorine production using Faraday’s Law, and provides an interface for monitoring, control, and session logging.
 
 Built with Tauri 2, React, and TypeScript.
 
@@ -51,8 +51,8 @@ Built with Tauri 2, React, and TypeScript.
 Central control panel for configuring treatment sessions and monitoring system state in real time.
 
 ### Live Statistics
-- Voltage (V), Current (A), Power (W), Charge (C)
-- NaOCl produced (g), concentration (ppm), estimated time remaining
+- Voltage (V), current (A), power (W), and charge (C)
+- NaOCl produced (g), concentration (ppm), and estimated time remaining
 - Energy usage and efficiency metrics
 
 ### Charts
@@ -64,17 +64,17 @@ Time-series visualization of:
 ### Session Logging
 Persistent session history including:
 - Duration
-- Output (grams, ppm)
+- Output in grams and ppm
 - Energy usage
-- Export to CSV
+- CSV export
 
 ### Electrode Health Tracking
 
-| Material        | Estimated Lifespan |
-|----------------|-------------------|
-| Graphite       | ~100 hours        |
-| Titanium MMO   | ~5000 hours       |
-| Platinum       | Minimal wear      |
+| Material      | Estimated Lifespan |
+|---------------|--------------------|
+| Graphite      | ~100 hours         |
+| Titanium MMO  | ~5000 hours        |
+| Platinum      | Minimal wear       |
 
 ---
 
@@ -83,11 +83,11 @@ Persistent session history including:
 ### Faraday’s Law
 
 <p align="center">
-  <img src="https://latex.codecogs.com/png.image?\dpi{120}grams%20=%20\frac{Q%20\times%20M%20\times%20\eta}{n%20\times%20F}" alt="Faraday Law Equation"/>
+  <img src="https://latex.codecogs.com/png.image?\dpi{140}\bg_white\color{black}\Large grams=\frac{Q\times M\times \eta}{n\times F}" alt="Faraday Law Equation" />
 </p>
 
 Where:
-- Q = total charge (coulombs)
+- Q = total charge in coulombs
 - M = molar mass of NaOCl (74.44 g/mol)
 - η = efficiency factor
 - n = electrons transferred (2)
@@ -96,27 +96,29 @@ Where:
 ### Concentration
 
 <p align="center">
-  <img src="https://latex.codecogs.com/png.image?\dpi{120}ppm%20=%20\frac{grams}{volume_{L}}%20\times%201000" alt="PPM Equation"/>
+  <img src="https://latex.codecogs.com/png.image?\dpi{140}\bg_white\color{black}\Large ppm=\frac{grams}{volume_L}\times1000" alt="PPM Equation" />
 </p>
 
 ### Time Estimation
 
 <p align="center">
-  <img src="https://latex.codecogs.com/png.image?\dpi{120}ETA%20=%20\frac{remaining\ charge}{current}" alt="ETA Equation"/>
+  <img src="https://latex.codecogs.com/png.image?\dpi{140}\bg_white\color{black}\Large ETA=\frac{Q_{remaining}}{I}" alt="ETA Equation" />
 </p>
 
 ---
 
 ## Tech Stack
 
-| Layer        | Technology |
-|-------------|-----------|
-| Desktop     | Tauri 2 (Rust) |
-| Frontend    | React + TypeScript |
-| Build       | Vite |
-| State       | Zustand |
-| Charts      | Recharts |
-| Hardware    | INA219 over I²C (USB / Bluetooth bridge) |
+| Layer        | Details |
+|-------------|---------|
+| Desktop     | Tauri 2 with Rust backend, command-based IPC, and native packaging |
+| Frontend    | React 19 + TypeScript with hooks-based UI architecture |
+| State       | Zustand with persisted configuration and session state |
+| Build       | Vite for fast local development and optimized production builds |
+| Charts      | Recharts with rolling real-time data buffers |
+| Hardware I/O| INA219 current and voltage sensing over I²C on Raspberry Pi |
+| Connectivity | USB serial and Bluetooth transport between host app and device |
+| Computation | Charge integration, efficiency-adjusted NaOCl estimation, and runtime projection |
 
 ---
 
