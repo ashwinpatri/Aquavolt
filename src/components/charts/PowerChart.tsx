@@ -12,7 +12,7 @@ const CustomTooltip = ({ active, payload }: CustomTooltipProps) => {
     <div style={{
       background: 'var(--bg-tertiary)', border: '1px solid var(--bg-border)',
       borderRadius: 'var(--radius-sm)', padding: '6px 10px',
-      fontSize: '12px', color: 'var(--text-primary)',
+      fontSize: '13px', fontWeight: 500, color: 'var(--text-primary)',
     }}>
       {payload[0].value.toFixed(2)} W
     </div>
@@ -35,7 +35,7 @@ export default function PowerChart({ flex }: { flex?: boolean }) {
       borderRadius: 'var(--radius-lg)', padding: '16px 18px',
       ...(flex ? { flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 } : {}),
     }}>
-      <span style={{ fontSize: '11px', fontWeight: 500, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+      <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
         {t.powerW} (W)
       </span>
       <div style={flex ? { flex: 1, minHeight: 0, marginTop: '10px' } : { height: 120, marginTop: '10px' }}>
@@ -43,7 +43,7 @@ export default function PowerChart({ flex }: { flex?: boolean }) {
           <LineChart data={data} margin={{ top: 4, right: 4, bottom: 0, left: -20 }}>
             <CartesianGrid stroke="var(--bg-tertiary)" strokeDasharray="3 3" vertical={false} />
             <XAxis dataKey="t" hide />
-            <YAxis domain={['auto', 'auto']} tick={{ fontSize: 10, fill: 'var(--text-muted)' }} tickLine={false} axisLine={false} />
+            <YAxis domain={['auto', 'auto']} tick={{ fontSize: 11, fontWeight: 500, fill: 'var(--text-muted)' }} tickLine={false} axisLine={false} />
             <Tooltip content={<CustomTooltip />} />
             <Line type="monotone" dataKey="v" stroke="#3b82f6" strokeWidth={2} dot={false} isAnimationActive={false} />
           </LineChart>

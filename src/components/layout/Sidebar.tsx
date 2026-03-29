@@ -11,7 +11,7 @@ import DeployButton from '../controls/DeployButton'
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
     <div style={{
-      fontSize: '10px', fontWeight: 600, color: 'var(--text-muted)',
+      fontSize: '11px', fontWeight: 600, color: 'var(--text-muted)',
       textTransform: 'uppercase', letterSpacing: '0.08em',
       padding: '0 0 8px 0', borderBottom: '1px solid var(--bg-border)', marginBottom: '12px',
     }}>{children}</div>
@@ -23,8 +23,8 @@ function Divider() { return <div style={{ borderTop: '1px solid var(--bg-border)
 function InfoRow({ label, value }: { label: string; value: string }) {
   return (
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-      <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{label}</span>
-      <span style={{ fontSize: '12px', color: 'var(--text-secondary)', fontWeight: 500 }}>{value}</span>
+      <span style={{ fontSize: '13px', fontWeight: 500, color: 'var(--text-muted)' }}>{label}</span>
+      <span style={{ fontSize: '13px', color: 'var(--text-secondary)', fontWeight: 600 }}>{value}</span>
     </div>
   )
 }
@@ -65,20 +65,20 @@ export default function Sidebar() {
         <Divider />
 
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px', paddingBottom: '8px', borderBottom: '1px solid var(--bg-border)' }}>
-          <span style={{ fontSize: '10px', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>{t.target}</span>
-          <button onClick={resetDashboard} title="Reset to defaults" style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '10px', color: 'var(--text-muted)', cursor: 'pointer', padding: '2px 6px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--bg-border)', background: 'transparent' }}
+          <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>{t.target}</span>
+          <button onClick={resetDashboard} title="Reset to defaults" style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '11px', fontWeight: 500, color: 'var(--text-muted)', cursor: 'pointer', padding: '2px 6px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--bg-border)', background: 'transparent' }}
             onMouseEnter={e => { e.currentTarget.style.color = 'var(--text-primary)'; e.currentTarget.style.borderColor = 'var(--purple-600)' }}
             onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-muted)'; e.currentTarget.style.borderColor = 'var(--bg-border)' }}
           >
-            <RotateCcw size={10} /> Reset
+            <RotateCcw size={11} /> Reset
           </button>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
           <ConcentrationSlider disabled={!connected} />
           <VolumeSelect        disabled={!connected} />
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', opacity: connected ? 1 : 0.4 }}>
-            <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{t.efficiency}</span>
-            <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--amber)', background: 'rgba(245,158,11,0.12)', border: '1px solid rgba(245,158,11,0.25)', borderRadius: '4px', padding: '2px 8px' }}>
+            <span style={{ fontSize: '13px', fontWeight: 500, color: 'var(--text-secondary)' }}>{t.efficiency}</span>
+            <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--amber)', background: 'rgba(245,158,11,0.12)', border: '1px solid rgba(245,158,11,0.25)', borderRadius: '4px', padding: '2px 8px' }}>
               {Math.round(config.efficiency * 100)}%
             </span>
           </div>
@@ -103,7 +103,7 @@ export default function Sidebar() {
         <div style={{
           position: 'absolute', bottom: 0, left: 0, right: 0, padding: '10px 16px',
           background: 'rgba(239,68,68,0.08)', borderTop: '1px solid rgba(239,68,68,0.2)',
-          textAlign: 'center', fontSize: '11px', color: 'var(--red)',
+          textAlign: 'center', fontSize: '12px', fontWeight: 500, color: 'var(--red)',
         }}>
           Connect device to enable controls
         </div>

@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo } from 'react'
+import { createContext, useContext, useEffect, useMemo } from 'react'
 import { useAppStore } from './store/appStore'
 import type { Translations } from './types'
 import en from './i18n/en'
@@ -28,6 +28,10 @@ export default function App() {
   const { language, tosAccepted } = useAppStore()
 
   const t = useMemo(() => (language ? (TRANSLATIONS[language] ?? en) : en), [language])
+
+  useEffect(() => {
+    document.documentElement.lang = language ?? 'en'
+  }, [language])
 
   // language=null -> pick language first; then TOS; then dashboard
   const screen = !language ? 'language' : !tosAccepted ? 'tos' : 'dashboard'

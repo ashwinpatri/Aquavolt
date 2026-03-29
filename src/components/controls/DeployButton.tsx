@@ -43,14 +43,14 @@ export default function DeployButton({ disabled }: { disabled: boolean }) {
           width:        '100%', display: 'flex', alignItems: 'center', justifyContent: 'center',
           gap:          '8px', padding: '10px', borderRadius: 'var(--radius-md)',
           border:       `1px solid ${borderColor}`, background: bg, color: textColor,
-          fontSize:     '13px', fontWeight: 500, cursor: 'pointer', transition: 'all 0.2s ease',
+          fontSize:     '14px', fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s ease',
         }}
       >
         {state === 'done' ? <Check size={14} /> : <Upload size={14} />}
         {label}
       </button>
       {lastDeployedAt !== null && (
-        <span style={{ fontSize: '10px', color: 'var(--text-muted)', textAlign: 'center' }}>
+        <span style={{ fontSize: '11px', fontWeight: 500, color: 'var(--text-muted)', textAlign: 'center' }}>
           {t.lastDeploy}: {new Date(lastDeployedAt).toLocaleTimeString()}
         </span>
       )}

@@ -49,14 +49,14 @@ export default function RightPanel() {
           flexShrink: 0,
         }}>
           <div>
-            <div style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 500 }}>
+            <div style={{ fontSize: '12px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 600 }}>
               {t.treatable} at 2 ppm dose
             </div>
             <div style={{ fontSize: '20px', fontWeight: 700, color: 'var(--green)', marginTop: '2px', fontVariantNumeric: 'tabular-nums' }}>
               {connected ? Math.round(treatable).toLocaleString() : '—'} L
             </div>
           </div>
-          <div style={{ fontSize: '12px', color: 'var(--text-muted)', textAlign: 'right', maxWidth: '200px' }}>
+          <div style={{ fontSize: '13px', fontWeight: 500, color: 'var(--text-muted)', textAlign: 'right', maxWidth: '200px' }}>
             {connected && liveData.charge > 0
               ? `${grams.toFixed(3)}g NaOCl × 500 = ${Math.round(treatable).toLocaleString()} liters`
               : 'Start a session to see treatment capacity'}

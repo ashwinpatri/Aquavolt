@@ -12,7 +12,10 @@ export const VOLUME_OPTIONS: { label: string; value: number | null }[] = [
 ]
 
 export const PPM_MIN = 100
-export const PPM_MAX = 1000
+/** Hard slider maximum (requires confirmation above `PPM_HIGH_CONFIRM_THRESHOLD`). */
+export const PPM_MAX = 1500
+/** Above this value, the UI requires acknowledgment before applying a new target. */
+export const PPM_HIGH_CONFIRM_THRESHOLD = 1000
 export const PPM_DEFAULT = 500
 
 export const DUTY_DEFAULT = 70

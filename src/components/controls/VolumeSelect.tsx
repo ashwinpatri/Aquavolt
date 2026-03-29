@@ -20,7 +20,7 @@ export default function VolumeSelect({ disabled }: { disabled: boolean }) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', opacity: disabled ? 0.4 : 1, pointerEvents: disabled ? 'none' : 'auto' }}>
-      <span style={{ fontSize: '12px', color: 'var(--text-secondary)', fontWeight: 500 }}>{t.jarSize}</span>
+      <span style={{ fontSize: '13px', color: 'var(--text-secondary)', fontWeight: 500 }}>{t.containerSize}</span>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '6px' }}>
         {VOLUME_OPTIONS.map(opt => {
           const selected = opt.value === null ? showCustom : (!showCustom && config.volumeLiters === opt.value)
@@ -33,7 +33,7 @@ export default function VolumeSelect({ disabled }: { disabled: boolean }) {
                 border:       `1px solid ${selected ? 'var(--purple-600)' : 'var(--bg-border)'}`,
                 background:   selected ? 'rgba(124,58,237,0.15)' : 'var(--bg-tertiary)',
                 color:        selected ? 'var(--purple-400)' : 'var(--text-secondary)',
-                fontSize:     '11px', fontWeight: selected ? 600 : 400,
+                fontSize:     '12px', fontWeight: selected ? 600 : 500,
                 cursor:       'pointer', transition: 'all 0.15s ease', whiteSpace: 'nowrap',
               }}
             >
@@ -51,10 +51,10 @@ export default function VolumeSelect({ disabled }: { disabled: boolean }) {
             style={{
               flex: 1, background: 'var(--bg-tertiary)', border: '1px solid var(--purple-600)',
               borderRadius: 'var(--radius-sm)', padding: '7px 10px',
-              color: 'var(--text-primary)', fontSize: '13px',
+              color: 'var(--text-primary)', fontSize: '14px', fontWeight: 500,
             }}
           />
-          <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>L</span>
+          <span style={{ fontSize: '13px', fontWeight: 500, color: 'var(--text-muted)' }}>L</span>
         </div>
       )}
     </div>

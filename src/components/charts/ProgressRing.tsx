@@ -34,7 +34,7 @@ export default function ProgressRing() {
       borderRadius:  'var(--radius-lg)', padding: '20px',
       display:       'flex', flexDirection: 'column', alignItems: 'center', gap: '12px',
     }}>
-      <span style={{ fontSize: '11px', fontWeight: 500, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+      <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
         {t.progress}
       </span>
 
@@ -54,11 +54,11 @@ export default function ProgressRing() {
           position: 'absolute', inset: 0,
           display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '2px',
         }}>
-          <span style={{ fontSize: '28px', fontWeight: 700, color: statusColor, fontVariantNumeric: 'tabular-nums' }}>
+          <span style={{ fontSize: '30px', fontWeight: 700, color: statusColor, fontVariantNumeric: 'tabular-nums' }}>
             {pct}%
           </span>
           {connected && (
-            <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
+            <span style={{ fontSize: '12px', fontWeight: 500, color: 'var(--text-muted)' }}>
               {Math.round(ppm)} ppm
             </span>
           )}
@@ -66,7 +66,7 @@ export default function ProgressRing() {
       </div>
 
       <div style={{ textAlign: 'center' }}>
-        <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
+        <span style={{ fontSize: '13px', fontWeight: 500, color: 'var(--text-secondary)' }}>
           {!connected ? 'Not connected' : fraction >= 1 ? t.targetReached : running ? t.running : t.idle}
         </span>
       </div>

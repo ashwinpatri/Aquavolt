@@ -60,7 +60,12 @@ export interface Translations {
   uptime: string
   target: string
   concentration: string
-  jarSize: string
+  highPpmTitle: string
+  highPpmBody: string
+  highPpmCheckbox: string
+  cancel: string
+  confirm: string
+  containerSize: string
   efficiency: string
   power: string
   dutyCycle: string

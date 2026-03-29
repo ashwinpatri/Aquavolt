@@ -9,8 +9,8 @@ export default function PowerSlider({ disabled }: { disabled: boolean }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', opacity: disabled ? 0.4 : 1, pointerEvents: disabled ? 'none' : 'auto' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <span style={{ fontSize: '12px', color: 'var(--text-secondary)', fontWeight: 500 }}>{t.dutyCycle}</span>
-        <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--blue)', fontVariantNumeric: 'tabular-nums' }}>
+        <span style={{ fontSize: '13px', color: 'var(--text-secondary)', fontWeight: 500 }}>{t.dutyCycle}</span>
+        <span style={{ fontSize: '14px', fontWeight: 600, color: 'var(--blue)', fontVariantNumeric: 'tabular-nums' }}>
           {config.dutyCycle}%
         </span>
       </div>

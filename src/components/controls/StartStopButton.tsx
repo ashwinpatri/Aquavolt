@@ -33,7 +33,7 @@ export default function StartStopButton({ disabled }: { disabled: boolean }) {
           ? 'linear-gradient(135deg, #991b1b, #ef4444)'
           : 'linear-gradient(135deg, #065f46, #10b981)',
         color:         disabled ? 'var(--text-muted)' : '#fff',
-        fontSize:      '14px', fontWeight: 700,
+        fontSize:      '15px', fontWeight: 700,
         letterSpacing: '0.04em', textTransform: 'uppercase',
         cursor:        disabled ? 'not-allowed' : 'pointer',
         transition:    'all 0.2s ease',
