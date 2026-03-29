@@ -9,16 +9,19 @@ interface SessionRef {
 }
 
 export function useSession() {
-  const { liveData, config, addSession, addLifetimeSeconds } = useAppStore()
+  const { liveData, config, addSession, addLifetimeSeconds, setSessionActive, setSessionStartedAt, setChargeOffset, clearHistory } = useAppStore()
   const sessionRef = useRef<SessionRef | null>(null)
 
   const beginSession = useCallback(() => {
+    const now = Date.now()
     sessionRef.current = {
-      startTime:    Date.now(),
+      startTime:    now,
       startCharge:  liveData.charge,
       startVoltage: liveData.voltage,
     }
-  }, [liveData.charge, liveData.voltage])
+    setSessionActive(true)
+    setSessionStartedAt(now)
+  }, [liveData.charge, liveData.voltage, setSessionActive, setSessionStartedAt])
 
   const endSession = useCallback((status: 'complete' | 'interrupted' = 'complete') => {
     if (!sessionRef.current) return
@@ -32,6 +35,10 @@ export function useSession() {
     const ppm         = volumeL ? ppmFromGrams(grams, volumeL) : null
     const avgVoltage  = (startVoltage + liveData.voltage) / 2
     const wattHours   = parseFloat(((deltaCharge * avgVoltage) / 3600).toFixed(4))
+    const rate        = config.electricityRate ?? 0.13
+    const costUsd     = parseFloat((wattHours * rate / 1000).toFixed(6))
+    const costPerWh   = wattHours > 0 ? parseFloat((costUsd / wattHours).toFixed(6)) : 0
+    const costPerGram = grams > 0 ? parseFloat((costUsd / grams).toFixed(4)) : 0
 
     addLifetimeSeconds(Math.floor(duration / 1000))
     addSession({
@@ -44,11 +51,21 @@ export function useSession() {
       ppm:           ppm !== null ? parseFloat(ppm.toFixed(0)) : null,
       efficiency:    config.efficiency,
       wattHours,
+      coulombs:      parseFloat(deltaCharge.toFixed(1)),
+      volumeL:       volumeL ?? null,
+      targetPpm:     config.targetPpm,
+      costUsd,
+      costPerWh,
+      costPerGram,
       status,
     })
 
     sessionRef.current = null
-  }, [liveData.charge, liveData.voltage, config, addSession, addLifetimeSeconds])
+    setSessionActive(false)
+    setSessionStartedAt(null)
+    setChargeOffset(liveData.charge)
+    clearHistory()
+  }, [liveData.charge, liveData.voltage, config, addSession, addLifetimeSeconds, setSessionActive, setSessionStartedAt, setChargeOffset, clearHistory])
 
   return { beginSession, endSession }
 }

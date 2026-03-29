@@ -29,6 +29,12 @@ export default function CurrentChart({ flex }: { flex?: boolean }) {
     .filter(d => (d.timestamp ?? 0) >= windowStart)
     .map(d => ({ t: d.timestamp, v: d.current }))
 
+  const values = data.map(d => d.v)
+  const dMin = values.length ? Math.min(...values) : 0
+  const dMax = values.length ? Math.max(...values) : 1
+  const pad  = Math.max((dMax - dMin) * 0.4, 0.01)
+  const domain: [number, number] = [Math.max(0, dMin - pad), dMax + pad]
+
   return (
     <div style={{
       background: 'var(--bg-secondary)', border: '1px solid var(--bg-border)',
@@ -43,7 +49,7 @@ export default function CurrentChart({ flex }: { flex?: boolean }) {
           <LineChart data={data} margin={{ top: 4, right: 4, bottom: 0, left: -20 }}>
             <CartesianGrid stroke="var(--bg-tertiary)" strokeDasharray="3 3" vertical={false} />
             <XAxis dataKey="t" hide />
-            <YAxis domain={['auto', 'auto']} tick={{ fontSize: 11, fontWeight: 500, fill: 'var(--text-muted)' }} tickLine={false} axisLine={false} />
+            <YAxis domain={domain} tick={{ fontSize: 11, fontWeight: 500, fill: 'var(--text-muted)' }} tickLine={false} axisLine={false} tickFormatter={(v: number) => +v.toFixed(2) + ''} />
             <Tooltip content={<CustomTooltip />} />
             <Line type="monotone" dataKey="v" stroke="var(--purple-600)" strokeWidth={2} dot={false} isAnimationActive={false} />
           </LineChart>

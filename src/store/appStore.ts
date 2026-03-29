@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import type { LiveData, AppConfig, SessionRecord, Language, ElectrodeType } from '../types'
-import { PPM_DEFAULT, DUTY_DEFAULT, DEFAULT_EFFICIENCY, MAX_CURRENT_DEFAULT, MAX_RUNTIME_DEFAULT } from '../utils/constants'
+import { PPM_DEFAULT, DUTY_DEFAULT, DEFAULT_EFFICIENCY, MAX_CURRENT_DEFAULT, MAX_RUNTIME_DEFAULT, DEFAULT_ELECTRICITY_RATE } from '../utils/constants'
 
 interface AppStore {
   language: Language | null
@@ -28,6 +28,13 @@ interface AppStore {
 
   running: boolean
   setRunning: (val: boolean) => void
+  sessionActive: boolean
+  setSessionActive: (val: boolean) => void
+  sessionStartedAt: number | null
+  setSessionStartedAt: (ts: number | null) => void
+
+  chargeOffset: number
+  setChargeOffset: (offset: number) => void
 
   liveData: LiveData
   chartHistory: LiveData[]
@@ -67,6 +74,7 @@ export const useAppStore = create<AppStore>()(
         efficiency: DEFAULT_EFFICIENCY, dutyCycle: DUTY_DEFAULT,
         maxCurrent: MAX_CURRENT_DEFAULT, maxRuntime: MAX_RUNTIME_DEFAULT, autoStop: true,
         electrodeType: 'graphite' as ElectrodeType,
+        electricityRate: DEFAULT_ELECTRICITY_RATE,
       },
       updateConfig: (patch) => set((s) => ({ config: { ...s.config, ...patch } })),
 
@@ -75,6 +83,13 @@ export const useAppStore = create<AppStore>()(
 
       running: false,
       setRunning: (val) => set({ running: val }),
+      sessionActive: false,
+      setSessionActive: (val) => set({ sessionActive: val }),
+      sessionStartedAt: null,
+      setSessionStartedAt: (ts) => set({ sessionStartedAt: ts }),
+
+      chargeOffset: 0,
+      setChargeOffset: (offset) => set({ chargeOffset: offset }),
 
       liveData: DEFAULT_LIVE, chartHistory: [],
       setLiveData: (data) => set((s) => ({

@@ -36,7 +36,7 @@ function formatUptime(seconds: number): string {
 }
 
 export default function Sidebar() {
-  const { connected, connectionType, deviceModel, liveData, config, updateConfig } = useAppStore()
+  const { connected, connectionType, deviceModel, liveData, config, updateConfig, lifetimeSeconds } = useAppStore()
   const t = useLanguage()
 
   const resetDashboard = () => updateConfig({
@@ -59,7 +59,7 @@ export default function Sidebar() {
         <div style={{ opacity: connected ? 1 : 0.4 }}>
           <InfoRow label={t.piModel}        value={connected ? (deviceModel ?? 'Unknown') : '—'} />
           <InfoRow label={t.connectionType} value={connected ? (connectionType === 'usb' ? 'USB' : 'Bluetooth') : '—'} />
-          <InfoRow label={t.uptime}         value={connected ? formatUptime(liveData.uptime) : '—'} />
+          <InfoRow label="Total Runtime"     value={formatUptime(lifetimeSeconds)} />
         </div>
 
         <Divider />

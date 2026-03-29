@@ -54,13 +54,18 @@ export default function ConcentrationSlider({ disabled }: { disabled: boolean })
             }}
           />
           <div
+            style={{
+              position: 'fixed', inset: 0, zIndex: 201,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              pointerEvents: 'none',
+            }}
+          >
+          <div
             className="fade-in"
             style={{
-              position: 'fixed', top: '50%', left: '50%',
-              transform: 'translate(-50%, -50%)',
               background: 'var(--bg-secondary)', border: '1px solid var(--bg-border)',
               borderRadius: 'var(--radius-xl)', padding: '24px', width: 'min(420px, calc(100vw - 32px))',
-              zIndex: 201, boxShadow: '0 24px 80px rgba(0,0,0,0.6)',
+              boxShadow: '0 24px 80px rgba(0,0,0,0.6)', pointerEvents: 'auto',
             }}
           >
             <h3 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '10px' }}>
@@ -109,6 +114,7 @@ export default function ConcentrationSlider({ disabled }: { disabled: boolean })
                 {t.confirm}
               </button>
             </div>
+          </div>
           </div>
         </>,
         document.body,

@@ -4,12 +4,13 @@ import { useLanguage } from '../../App'
 import { gramsProduced, ppmFromGrams, litersTreatable, formatEta, coulombsNeeded, etaSeconds } from '../../utils/faraday'
 
 export default function StatsGrid() {
-  const { liveData, config, connected } = useAppStore()
+  const { liveData, config, connected, chargeOffset } = useAppStore()
   const t = useLanguage()
 
-  const { voltage: rawVoltage, current, charge } = liveData
+  const { voltage: sensorVoltage, current } = liveData
+  const charge = Math.max(0, liveData.charge - chargeOffset)
   const { running } = useAppStore()
-  const voltage = running && rawVoltage < 2 ? rawVoltage + 3 : rawVoltage
+  const voltage = running && sensorVoltage < 2 ? sensorVoltage + 3 : sensorVoltage
   const power   = parseFloat((voltage * current).toFixed(3))
   const volumeL    = config.customVolume ?? config.volumeLiters
   const grams      = gramsProduced(charge, config.efficiency)
@@ -31,7 +32,7 @@ export default function StatsGrid() {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px' }}>
         <StatCard label={t.gramsProduced} value={connected ? grams.toFixed(3) : '—'} unit="g" accent />
         <StatCard label={t.estimatedPpm}  value={connected && ppm > 0 ? Math.round(ppm) : '—'} unit="ppm" accent />
-        <StatCard label={t.eta}           value={connected ? formatEta(etaSec) : '—'} />
+        <StatCard label={t.eta}           value={connected && running ? formatEta(etaSec) : '—'} />
         <StatCard label={t.treatable}     value={connected ? Math.round(treatable).toLocaleString() : '—'} unit="L" />
       </div>
     </div>

@@ -22,6 +22,7 @@ export const DUTY_DEFAULT = 70
 
 export const MAX_CURRENT_DEFAULT = 3.0       // A
 export const MAX_RUNTIME_DEFAULT = 60        // minutes
+export const DEFAULT_ELECTRICITY_RATE = 0.13 // USD per kWh (US average)
 
 // Electrode specs: max operational hours before replacement recommended
 // Graphite: degrades continuously via oxidation (~100 hrs for hobbyist cells)

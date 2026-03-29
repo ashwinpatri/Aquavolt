@@ -21,6 +21,7 @@ export interface AppConfig {
   maxRuntime: number
   autoStop: boolean
   electrodeType: ElectrodeType
+  electricityRate: number
 }
 
 export interface SessionRecord {
@@ -33,6 +34,12 @@ export interface SessionRecord {
   ppm: number | null
   efficiency: number
   wattHours: number
+  coulombs: number
+  volumeL: number | null
+  targetPpm: number
+  costUsd: number
+  costPerWh: number
+  costPerGram: number
   status: 'complete' | 'interrupted'
 }
 

@@ -5,12 +5,17 @@ import { useLanguage } from '../App'
 import type { SessionRecord } from '../types'
 
 function exportCsv(sessions: SessionRecord[]) {
-  const headers = ['Start Time', 'Duration', 'Grams', 'PPM', 'Efficiency', 'Status']
+  const headers = ['Start Time', 'End Time', 'Duration', 'NaOCl (g)', 'Est. PPM', 'Target PPM', 'Volume (L)', 'Charge (C)', 'Energy (Wh)', 'Efficiency', 'Status']
   const rows = sessions.map(s => [
     new Date(s.startTime).toLocaleString(),
+    new Date(s.endTime).toLocaleString(),
     s.durationLabel,
     s.grams,
     s.ppm ?? '',
+    s.targetPpm,
+    s.volumeL ?? '',
+    s.coulombs ?? '',
+    s.wattHours,
     `${Math.round(s.efficiency * 100)}%`,
     s.status,
   ])
@@ -66,12 +71,20 @@ function SessionRow({ session }: { session: SessionRecord }) {
       </tr>
       {expanded && (
         <tr style={{ background: 'var(--bg-tertiary)' }}>
-          <td colSpan={7} style={{ padding: '12px 16px' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px' }}>
-              <InfoItem label="Session ID"    value={session.id} />
-              <InfoItem label="End Time"      value={new Date(session.endTime).toLocaleTimeString()} />
-              <InfoItem label="Grams"         value={`${session.grams}g NaOCl`} />
-              <InfoItem label="Concentration" value={session.ppm ? `${session.ppm} ppm` : '—'} />
+          <td colSpan={7} style={{ padding: '14px 16px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '14px' }}>
+              <InfoItem label="Start Time"       value={new Date(session.startTime).toLocaleString()} />
+              <InfoItem label="End Time"         value={new Date(session.endTime).toLocaleString()} />
+              <InfoItem label="Duration"         value={session.durationLabel} />
+              <InfoItem label="Status"           value={session.status.charAt(0).toUpperCase() + session.status.slice(1)} />
+              <InfoItem label="NaOCl Produced"   value={`${session.grams} g`} />
+              <InfoItem label="Est. Concentration" value={session.ppm != null ? `${session.ppm} ppm` : '—'} />
+              <InfoItem label="Target PPM"       value={`${session.targetPpm} ppm`} />
+              <InfoItem label="Volume"           value={session.volumeL != null ? `${session.volumeL} L` : '—'} />
+              <InfoItem label="Charge Used"      value={`${session.coulombs ?? '—'} C`} />
+              <InfoItem label="Energy Used"      value={`${session.wattHours} Wh`} />
+              <InfoItem label="Efficiency"       value={`${Math.round(session.efficiency * 100)}%`} />
+              <InfoItem label="Session ID"       value={session.id} />
             </div>
           </td>
         </tr>
