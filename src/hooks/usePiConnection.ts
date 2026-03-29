@@ -27,9 +27,8 @@ export function usePiConnection() {
           timestamp: typeof data.timestamp === 'number'  ? data.timestamp : Date.now(),
           running:   typeof data.running   === 'boolean' ? data.running   : undefined,
         })
-        // Only trust Pi's running=false to catch unexpected stops.
-        // The app's own start()/stop() calls are the source of truth for running=true.
-        if (data.running === false) setRunning(false)
+        // Only set running=false from Pi if current was 0 (genuine stop, not pre-start packet)
+        if (data.running === false && (data.current as number) === 0 && (data.voltage as number) === 0) setRunning(false)
       } catch { /* ignore malformed frames */ }
     })
 
@@ -55,8 +54,8 @@ export function usePiConnection() {
   }, [setConnected, setDeviceModel, setRunning])
 
   const start = useCallback(async () => {
-    await invoke('send_serial', { cmd: JSON.stringify({ action: 'START', duty_cycle: config.dutyCycle }) })
     setRunning(true)
+    await invoke('send_serial', { cmd: JSON.stringify({ action: 'START', duty_cycle: config.dutyCycle }) })
   }, [config.dutyCycle, setRunning])
 
   const stop = useCallback(async () => {
