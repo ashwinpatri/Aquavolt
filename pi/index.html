@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Electrochlorinator</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.1/socket.io.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg:      #0f1117;
+    --surface: #1a1d27;
+    --border:  #2a2d3a;
+    --text:    #e2e8f0;
+    --muted:   #64748b;
+    --green:   #22c55e;
+    --amber:   #f59e0b;
+    --red:     #ef4444;
+    --blue:    #3b82f6;
+    --radius:  12px;
+  }
+  body { background: var(--bg); color: var(--text); font-family: system-ui, sans-serif; font-size: 15px; line-height: 1.5; }
+  .app { max-width: 900px; margin: 0 auto; padding: 20px 16px 60px; }
+  h1 { font-size: 22px; font-weight: 600; margin-bottom: 4px; }
+  .subtitle { color: var(--muted); font-size: 13px; margin-bottom: 24px; }
+
+  /* ── Cards ── */
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 16px; }
+  .card-title { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 14px; }
+
+  /* ── Status bar ── */
+  .status-bar { display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 16px; background: var(--surface); }
+  .status-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--muted); flex-shrink: 0; }
+  .status-dot.running { background: var(--green); box-shadow: 0 0 8px var(--green); animation: pulse 1.4s ease-in-out infinite; }
+  .status-dot.complete { background: var(--blue); }
+  .status-dot.stopped { background: var(--red); }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
+  .status-text { font-size: 14px; font-weight: 500; }
+  .status-eta { margin-left: auto; font-size: 13px; color: var(--muted); }
+
+  /* ── Metrics grid ── */
+  .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin-bottom: 16px; }
+  .metric { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; }
+  .metric-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 4px; }
+  .metric-value { font-size: 26px; font-weight: 700; line-height: 1.1; }
+  .metric-unit  { font-size: 13px; color: var(--muted); margin-left: 3px; }
+
+  /* ── Progress bar ── */
+  .progress-wrap { margin: 10px 0 6px; }
+  .progress-track { height: 10px; background: var(--border); border-radius: 99px; overflow: hidden; }
+  .progress-fill  { height: 100%; border-radius: 99px; background: var(--green); transition: width .4s ease; }
+  .progress-labels { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+  /* ── Controls ── */
+  .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media(max-width:560px){ .controls { grid-template-columns: 1fr; } }
+
+  label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+  select, input[type=number] {
+    width: 100%; padding: 9px 12px; background: var(--bg); border: 1px solid var(--border);
+    border-radius: 8px; color: var(--text); font-size: 14px; outline: none;
+  }
+  select:focus, input[type=number]:focus { border-color: var(--blue); }
+
+  .slider-wrap { display: flex; align-items: center; gap: 10px; }
+  input[type=range] { flex: 1; accent-color: var(--green); }
+  .slider-val { min-width: 44px; text-align: right; font-weight: 600; font-size: 15px; }
+
+  /* ── Buttons ── */
+  .btn-row { display: flex; gap: 10px; margin-top: 16px; }
+  button {
+    flex: 1; padding: 12px; border: none; border-radius: 8px;
+    font-size: 15px; font-weight: 600; cursor: pointer; transition: opacity .15s;
+  }
+  button:active { opacity: .8; }
+  #btn-start  { background: var(--green); color: #000; }
+  #btn-stop   { background: var(--red);   color: #fff; }
+  #btn-start:disabled, #btn-stop:disabled { opacity: .35; cursor: default; }
+
+  /* ── Chart ── */
+  .chart-wrap { position: relative; height: 180px; }
+
+  /* ── Log ── */
+  .log-list { list-style: none; font-size: 12px; color: var(--muted); max-height: 120px; overflow-y: auto; }
+  .log-list li { padding: 3px 0; border-bottom: 1px solid var(--border); }
+  .log-list li:last-child { border: none; }
+
+  /* ── Complete overlay ── */
+  .complete-banner { display: none; background: #052e16; border: 1px solid var(--green); border-radius: var(--radius); padding: 16px 20px; margin-bottom: 16px; }
+  .complete-banner.show { display: block; }
+  .complete-banner h2 { color: var(--green); font-size: 16px; margin-bottom: 4px; }
+  .complete-banner p  { font-size: 13px; color: #86efac; }
+</style>
+</head>
+<body>
+<div class="app">
+  <h1>Electrochlorinator</h1>
+  <p class="subtitle">Raspberry Pi — NaOCl synthesis controller</p>
+
+  <!-- Status -->
+  <div class="status-bar">
+    <div class="status-dot" id="status-dot"></div>
+    <span class="status-text" id="status-text">Idle</span>
+    <span class="status-eta" id="status-eta"></span>
+  </div>
+
+  <!-- Complete banner -->
+  <div class="complete-banner" id="complete-banner">
+    <h2>Target reached</h2>
+    <p id="complete-msg">500 ppm confirmed — safe to use for water treatment.</p>
+  </div>
+
+  <!-- Metrics -->
+  <div class="metrics">
+    <div class="metric">
+      <div class="metric-label">Voltage</div>
+      <div><span class="metric-value" id="m-voltage">0.0</span><span class="metric-unit">V</span></div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Current</div>
+      <div><span class="metric-value" id="m-current">0.0</span><span class="metric-unit">A</span></div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Charge</div>
+      <div><span class="metric-value" id="m-charge">0</span><span class="metric-unit">C</span></div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">NaOCl made</div>
+      <div><span class="metric-value" id="m-grams">0.00</span><span class="metric-unit">g</span></div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Power</div>
+      <div><span class="metric-value" id="m-duty">0</span><span class="metric-unit">%</span></div>
+    </div>
+  </div>
+
+  <!-- Progress -->
+  <div class="card">
+    <div class="card-title">Progress toward target</div>
+    <div class="progress-wrap">
+      <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+      <div class="progress-labels">
+        <span id="prog-grams">0.00g / 0.00g</span>
+        <span id="prog-pct">0%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chart -->
+  <div class="card">
+    <div class="card-title">Live current (A)</div>
+    <div class="chart-wrap"><canvas id="chart"></canvas></div>
+  </div>
+
+  <!-- Controls -->
+  <div class="card">
+    <div class="card-title">Settings</div>
+    <div class="controls">
+      <div>
+        <label>Target concentration</label>
+        <div class="slider-wrap">
+          <input type="range" id="sl-ppm" min="100" max="1000" step="50" value="500" oninput="updatePpm(this.value)">
+          <span class="slider-val"><span id="sl-ppm-val">500</span> ppm</span>
+        </div>
+      </div>
+      <div>
+        <label>Power level</label>
+        <div class="slider-wrap">
+          <input type="range" id="sl-power" min="0" max="100" step="5" value="70" oninput="updatePower(this.value)">
+          <span class="slider-val"><span id="sl-power-val">70</span>%</span>
+        </div>
+      </div>
+      <div>
+        <label>Jar / volume</label>
+        <select id="sel-volume" onchange="updateVolume(this.value)">
+          <option value="0.5">500 ml</option>
+          <option value="1.0" selected>1 litre (mason jar)</option>
+          <option value="2.0">2 litres</option>
+        </select>
+      </div>
+      <div>
+        <label>Efficiency (from strip calibration)</label>
+        <input type="number" id="inp-eff" min="0.1" max="1.0" step="0.05" value="0.70" onchange="updateEff(this.value)">
+      </div>
+    </div>
+
+    <!-- Estimated run time preview -->
+    <div style="margin-top:14px; padding:12px; background:var(--bg); border-radius:8px; font-size:13px; color:var(--muted);">
+      <span id="preview-text">At 500 ppm in 1.0 L at 70% power → approx. 21 min estimated</span>
+    </div>
+
+    <div class="btn-row">
+      <button id="btn-start" onclick="startRun()">Start</button>
+      <button id="btn-stop"  onclick="stopRun()" disabled>Stop</button>
+    </div>
+  </div>
+
+  <!-- Log -->
+  <div class="card">
+    <div class="card-title">Event log</div>
+    <ul class="log-list" id="log-list"><li>Waiting to start…</li></ul>
+  </div>
+</div>
+
+<script>
+const socket = io();
+
+// ── Chart setup ──────────────────────────────────────────────────────────────
+const MAX_POINTS = 60;
+const chartData  = { labels: [], datasets: [{ label: "Current (A)", data: [],
+  borderColor: "#22c55e", backgroundColor: "rgba(34,197,94,.08)",
+  borderWidth: 2, pointRadius: 0, tension: 0.3, fill: true }] };
+
+const chart = new Chart(document.getElementById("chart"), {
+  type: "line",
+  data: chartData,
+  options: {
+    animation: false,
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { display: false },
+      y: { min: 0, max: 3, grid: { color: "#2a2d3a" }, ticks: { color: "#64748b", font: { size: 11 } } }
+    }
+  }
+});
+
+function pushChart(current) {
+  const t = new Date().toLocaleTimeString();
+  chartData.labels.push(t);
+  chartData.datasets[0].data.push(current);
+  if (chartData.labels.length > MAX_POINTS) {
+    chartData.labels.shift();
+    chartData.datasets[0].data.shift();
+  }
+  chart.update("none");
+}
+
+// ── Local UI state ────────────────────────────────────────────────────────────
+let ui = { ppm: 500, volume: 1.0, power: 70, efficiency: 0.70 };
+
+function updatePpm(v) {
+  ui.ppm = +v;
+  document.getElementById("sl-ppm-val").textContent = v;
+  refreshPreview();
+}
+function updatePower(v) {
+  ui.power = +v;
+  document.getElementById("sl-power-val").textContent = v;
+  refreshPreview();
+  // Live power adjust if running
+  if (document.getElementById("btn-stop").disabled === false) {
+    socket.emit("set_power", { duty_cycle: ui.power });
+  }
+}
+function updateVolume(v) { ui.volume = +v; refreshPreview(); }
+function updateEff(v)    { ui.efficiency = +v; refreshPreview(); }
+
+function refreshPreview() {
+  const grams   = (ui.ppm * ui.volume) / 1000;
+  const coulombs = (grams / (74.44 * ui.efficiency)) * 2 * 96485;
+  // Assume ~1.8A at chosen power level
+  const amps    = (ui.power / 100) * 1.8;
+  const mins    = amps > 0 ? Math.round(coulombs / amps / 60) : "–";
+  document.getElementById("preview-text").textContent =
+    `At ${ui.ppm} ppm in ${ui.volume} L at ${ui.power}% power → approx. ${mins} min estimated`;
+}
+
+// ── API calls ─────────────────────────────────────────────────────────────────
+async function startRun() {
+  const res = await fetch("/api/start", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ target_ppm: ui.ppm, volume_L: ui.volume,
+                           efficiency: ui.efficiency, duty_cycle: ui.power })
+  });
+  if (!res.ok) { const d = await res.json(); alert(d.error); }
+}
+
+async function stopRun() {
+  await fetch("/api/stop", { method: "POST" });
+}
+
+// ── Socket state handler ──────────────────────────────────────────────────────
+socket.on("state", s => {
+  // Metrics
+  document.getElementById("m-voltage").textContent = s.voltage.toFixed(2);
+  document.getElementById("m-current").textContent = s.current.toFixed(2);
+  document.getElementById("m-charge").textContent  = Math.round(s.charge);
+  document.getElementById("m-grams").textContent   = s.grams.toFixed(3);
+  document.getElementById("m-duty").textContent    = s.duty_cycle;
+
+  // Progress
+  document.getElementById("progress-fill").style.width = s.progress + "%";
+  document.getElementById("prog-grams").textContent =
+    `${s.grams.toFixed(3)}g / ${s.grams_target.toFixed(3)}g`;
+  document.getElementById("prog-pct").textContent = s.progress + "%";
+
+  // Status dot + text
+  const dot  = document.getElementById("status-dot");
+  const txt  = document.getElementById("status-text");
+  const eta  = document.getElementById("status-eta");
+  dot.className = "status-dot";
+  if (s.complete) {
+    dot.classList.add("complete");
+    txt.textContent = "Complete";
+    eta.textContent = "";
+  } else if (s.running) {
+    dot.classList.add("running");
+    txt.textContent = "Running";
+    eta.textContent = s.eta_minutes != null ? `ETA ${s.eta_minutes} min` : "";
+  } else {
+    dot.classList.add("stopped");
+    txt.textContent = "Idle";
+    eta.textContent = "";
+  }
+
+  // Complete banner
+  const banner = document.getElementById("complete-banner");
+  if (s.complete) {
+    banner.classList.add("show");
+    document.getElementById("complete-msg").textContent =
+      `${s.target_ppm} ppm confirmed — safe to use for water treatment.`;
+  } else {
+    banner.classList.remove("show");
+  }
+
+  // Buttons
+  document.getElementById("btn-start").disabled = s.running;
+  document.getElementById("btn-stop").disabled  = !s.running;
+
+  // Chart
+  pushChart(s.current);
+
+  // Log
+  const logEl = document.getElementById("log-list");
+  if (s.log && s.log.length) {
+    logEl.innerHTML = [...s.log].reverse()
+      .map(l => `<li>${l}</li>`).join("");
+  }
+});
+
+// Init preview
+refreshPreview();
+</script>
+</body>
+</html>

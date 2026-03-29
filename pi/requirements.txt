@@ -1,0 +1,5 @@
+flask
+flask-socketio
+adafruit-circuitpython-ina219
+RPi.GPIO
+pybluez
