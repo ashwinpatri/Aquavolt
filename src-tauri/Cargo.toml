@@ -1,6 +1,6 @@
 [package]
 name = "aquavolt"
-version = "1.1.6"
+version = "1.1.7"
 description = "AquaVolt Electrochemical Water Treatment System"
 authors = []
 edition = "2021"
