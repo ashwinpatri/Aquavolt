@@ -27,7 +27,9 @@ export function usePiConnection() {
           timestamp: typeof data.timestamp === 'number'  ? data.timestamp : Date.now(),
           running:   typeof data.running   === 'boolean' ? data.running   : undefined,
         })
-        if (typeof data.running === 'boolean') setRunning(data.running)
+        // Only trust Pi's running=false to catch unexpected stops.
+        // The app's own start()/stop() calls are the source of truth for running=true.
+        if (data.running === false) setRunning(false)
       } catch { /* ignore malformed frames */ }
     })
 
