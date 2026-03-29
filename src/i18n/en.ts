@@ -47,7 +47,7 @@ Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil 
   efficiency: 'Efficiency',
   power: 'Power',
   dutyCycle: 'Duty Cycle',
-  start: 'Start',
+  start: 'Deploy',
   stop: 'Stop',
   deploy: 'Push to Device',
   lastDeploy: 'Last deployed',

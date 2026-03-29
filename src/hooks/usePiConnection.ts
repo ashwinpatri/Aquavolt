@@ -59,8 +59,8 @@ export function usePiConnection() {
   }, [config.dutyCycle, setRunning])
 
   const stop = useCallback(async () => {
-    await invoke('send_serial', { cmd: JSON.stringify({ action: 'STOP' }) })
     setRunning(false)
+    await invoke('send_serial', { cmd: JSON.stringify({ action: 'STOP' }) })
   }, [setRunning])
 
   const setPower = useCallback(async (duty: number) => {
