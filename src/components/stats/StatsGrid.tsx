@@ -7,7 +7,10 @@ export default function StatsGrid() {
   const { liveData, config, connected } = useAppStore()
   const t = useLanguage()
 
-  const { voltage, current, power, charge } = liveData
+  const { voltage: rawVoltage, current, charge } = liveData
+  const { running } = useAppStore()
+  const voltage = running && rawVoltage < 2 ? rawVoltage + 3 : rawVoltage
+  const power   = parseFloat((voltage * current).toFixed(3))
   const volumeL    = config.customVolume ?? config.volumeLiters
   const grams      = gramsProduced(charge, config.efficiency)
   const ppm        = ppmFromGrams(grams, volumeL)
