@@ -1,7 +1,8 @@
 import { RotateCcw } from 'lucide-react'
 import { useAppStore } from '../../store/appStore'
 import { useLanguage } from '../../App'
-import { PPM_DEFAULT, DUTY_DEFAULT, DEFAULT_EFFICIENCY } from '../../utils/constants'
+import { PPM_DEFAULT, DUTY_DEFAULT, DEFAULT_EFFICIENCY, DOSE_PPM } from '../../utils/constants'
+import { gramsProduced, litersTreatable, coulombsNeeded } from '../../utils/faraday'
 import ConcentrationSlider from '../controls/ConcentrationSlider'
 import PowerSlider from '../controls/PowerSlider'
 import VolumeSelect from '../controls/VolumeSelect'
@@ -82,6 +83,24 @@ export default function Sidebar() {
             </span>
           </div>
         </div>
+
+        <Divider />
+
+        <SectionLabel>Dosing</SectionLabel>
+        <InfoRow
+          label="Per 1 L of water"
+          value={`${((DOSE_PPM * 1000) / config.targetPpm).toFixed(1)} mL`}
+        />
+        <InfoRow
+          label="Total purifiable"
+          value={(() => {
+            const volumeL = config.customVolume ?? config.volumeLiters
+            if (!volumeL) return '—'
+            const totalC = coulombsNeeded(config.targetPpm, volumeL, config.efficiency)
+            const liters = litersTreatable(gramsProduced(totalC, config.efficiency))
+            return liters > 0 ? `${Math.round(liters).toLocaleString()} L` : '—'
+          })()}
+        />
 
         <Divider />
 
